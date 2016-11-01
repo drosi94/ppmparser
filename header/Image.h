@@ -2,7 +2,7 @@
 //
 // C++ course assignment code 
 //
-// G. Papaioannou, 2015
+// G. Papaioannou, 2015 - 2016
 //
 //
 
@@ -11,73 +11,144 @@
 
 #include "Color.h"
 
-// We put every class or function associated with the image storage, compression and manipulation 
-// in the "imaging" namespace
+/*! The imaging namespace contains every class or function associated with the image storage, compression and manipulation. 
+ */ 
 namespace imaging
 {
 
-
 //------------------------------------ class Image ------------------------------------------------
-// 
-// It is the class that represents a generic data container for an image. It holds the actual buffer
-// of the pixel values and provides methods for accessing them either as individual pixels or as
-// a memory block. The Image class alone does not provide any functionality for loading and storing an image, as
-// it is the result or input to such a procedure. 
-//
-// The internal buffer of an image object stores the actual bytes (data) of the color image as
-// a contiguous sequence of RGB triplets. Hence, the size of the buffer variable holding these data is 
-// 3 X width X height bytes.
 
+	/*! It is the class that represents a generic data container for an image.
+	 * 
+	 * It holds the actual buffer of the pixel values and provides methods for accessing them, 
+	 * either as individual pixels or as a memory block. The Image class alone does not provide 
+	 * any functionality for loading and storing an image, as it is the result or input to such a procedure. 
+	 *
+	 * The internal buffer of an image object stores the actual bytes (data) of the color image as
+	 * a contiguous sequence of RGB triplets. Hence, the size of the buffer variable holding these data is 
+	 * 3 X width X height X sizeof(component_t) bytes.
+	 *
+	 * All values stored in the internal memory buffer are floating point values and for typical (normalized)
+	 * intensity ranges, each color component is within the range [0.0, 1.0].
+	 *
+	 * \see component_t
+	 */ 
 	class Image
 	{
 	public:
-		enum channel_t {RED=0,GREEN, BLUE};          // now you can use the names RED, GREEN, BLUE instead of 0,1,2
-		                                             // to index individual channels
+		enum channel_t {RED=0,GREEN, BLUE};          //! You can use the names RED, GREEN, BLUE instead of 0,1,2 to access individual Color channels.
+		                                             
 	protected:
-		component_t * buffer;                          // Holds the image data
+		component_t * buffer;                        //! Holds the image data.
 
-		unsigned int width, height;                  // width and height of the image (in pixels)
+		unsigned int width, 						 //! The width of the image (in pixels)
+					 height;		                 //! The height of the image (in pixels)
 
 	public:
 		// metric accessors
-		const unsigned int getWidth() const {return width;}      // returns the width of the image
-		const unsigned int getHeight() const {return height;}    // returns the height of the image
+		
+		/*! Returns the width of the image
+		 */
+		const unsigned int getWidth() const {return width;}      
+		
+		/*! Returns the height of the image
+		 */
+		const unsigned int getHeight() const {return height;}   
 
 		// data accessors
-		component_t * getRawDataPtr();                           // Obtain a pointer to the internal data
-		                                                         // This is NOT a copy of the internal image data, but rather 
-		                                                         // a pointer to the internally allocated space, so DO NOT
-		                                                         // attempt to delete the pointer. 
+		
+		/*! Obtains a pointer to the internal data.
+		 *
+		 *  This is NOT a copy of the internal image data, but rather a pointer 
+		 *  to the internally allocated space, so DO NOT attempt to delete the pointer. 
+		 */
+		component_t * getRawDataPtr();                           
 
-		Color getPixel(unsigned int x, unsigned int y) const;    // get the color of the image at location (x,y)
-		                                                         // Do any necessary bound checking. Also take into account
-		                                                         // the "interleaved" flag to fetch the appropriate data
-		                                                         // Return a black (0,0,0) color in case of an out-of-bounds
-		                                                         // x,y pair
+		/*! Obtains the color of the image at location (x,y).
+		 *
+		 *  The method should do any necessary bounds checking. 
+		 *
+		 *  \param x is the (zero-based) horizontal index of the pixel to get. 
+		 *  \param y is the (zero-based) vertical index of the pixel to get. 
+		 *
+		 *  \return The color of the (x,y) pixel as a Color object. Returns a black (0,0,0) color in case of an out-of-bounds x,y pair.
+		 */
+		Color getPixel(unsigned int x, unsigned int y) const;
 
 		// data mutators
+		
+		/*! Sets the RGB values for an (x,y) pixel.
+		 * 
+		 *  The method should perform any necessary bounds checking.
+		 *  
+		 *  \param x is the (zero-based) horizontal index of the pixel to set. 
+		 *  \param y is the (zero-based) vertical index of the pixel to set. 
+		 *  \param value is the new color for the (x,y) pixel.
+		 */
 		void setPixel(unsigned int x, unsigned int y, Color & value); 
-		                                                         // Set the RGB values for an (x,y) pixel. Do all 
-		                                                         // necessary bound checks and respect the "interleaved"
-		                                                         // flag when updating our data.
+		                                                         
+		/*! Copies the image data from an external raw buffer to the internal image buffer. 
+		 *
+		 *  The member function ASSUMES that the input buffer is of a size compatible with the internal storage of the 
+		 *  Image object and that the data buffer has been alreeady allocated. If the image buffer is not allocated or the 
+		 *  width or height of the image are 0, the method should exit immediately.
+		 *
+		 *  \param data_ptr is the reference to the preallocated buffer from where to copy the data to the Image object.
+		 */
+		void setData(const component_t * & data_ptr);            
 
-		void setData(const component_t * & data_ptr);            // Copy the data from data_ptr to the internal buffer.
-		                                                         // The function ASSUMES a proper size for the incomming data array.
-
+		/*! Changes the internal image data storage size.
+		 *
+		 * If the one or both of the given dimensions are smaller, the image should be clipped 
+		 * by discarding the remaining pixels in the rows and/or columns outside the margins. 
+		 * If the new dimensions are larger, pad the old pixels with zero values (black color).
+		 * If the image is not yet allocated (zero width and height), allocate the internal buffer and 
+		 * set the image size according to the given dimensions.
+		 * 
+		 * \param new_width is the user-provided width to resize the image storage to.
+		 * \param new_height is the user-provided height to resize the image storage to.
+		 */
 		void resize(unsigned int new_width, unsigned int new_height);
-		                                                         // Change the internal data storage size to the new ones.
-		                                                         // If the one or both of the dimensions are smaller, clip the 
-		                                                         // by discarding the remaining pixels in the rows / columns outside
-		                                                         // the margins. If the new dimensions are larger, pad the old pixels
-		                                                         // with zero values (black color).
-
+		                                                         
 		// constructors and destructor
-		Image();											     // default: zero dimensions, nullptr for the buffer.	
+
+		/*! Default constructor.
+		 * 
+		 * By default, the dimensions of the image should be zero and the buffer must be set to nullptr.
+		 */
+		Image();											     	
+		
+		/*! Constructor with width and height specification.
+		 * 
+		 * \param width is the desired width of the new image.
+		 * \param height is the desired height of the new image.
+		 */ 
 		Image(unsigned int width, unsigned int height);
+		
+		/*! Constructor with data initialization.
+		 * 
+		 * \param width is the desired width of the new image.
+		 * \param height is the desired height of the new image.
+		 * \param data_ptr is the source of the data to copy to the internal image buffer.
+		 * 
+		 * \see setData
+		 */ 
 		Image(unsigned int width, unsigned int height, const component_t * data_ptr);
+		
+		/*! Copy constructor.
+		 *
+		 * \param src is the source image to replicate in this object.
+		 */
 		Image(const Image &src);
+		
+		/*! The Image destructor.
+		 */
 		~Image();
 
+		/*! Copy assignment operator.
+		 *
+		 * \param right is the source image.
+		 */
 		Image & operator = (const Image & right);
 
 	};
