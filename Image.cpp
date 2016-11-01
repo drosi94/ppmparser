@@ -84,10 +84,10 @@ void Image::resize(unsigned int new_width, unsigned int new_height) {
     for (unsigned int x = 0; x < new_height; x++) {
         for (unsigned int y = 0; y < new_width; y++) {
             Color color = getPixel(x, y);
-            int p = 3 * y + 3 * x * new_width;
-            newBuffer[p] = color.r;
-            newBuffer[p + 1] = color.g;
-            newBuffer[p + 2] = color.b;
+            int index = 3 * y + 3 * x * new_width;
+            newBuffer[index] = color.r;
+            newBuffer[index + 1] = color.g;
+            newBuffer[index + 2] = color.b;
         }
     }
 
