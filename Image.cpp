@@ -56,6 +56,7 @@ void Image::setPixel(unsigned int x, unsigned int y, Color &value) {
     buffer[index + 2] = value.b;
 
 }
+
 void Image::setData(const component_t *&data_ptr) {
 
     //Checks if image buffer has been allocated
@@ -76,13 +77,13 @@ void Image::setData(const component_t *&data_ptr) {
 
 void Image::resize(unsigned int new_width, unsigned int new_height) {
     //create a new temp buffer with the new dimensions
-    component_t* temp= new  component_t[3 * new_width * new_height];
+    component_t *temp = new component_t[3 * new_width * new_height];
     //for the min amount of lines of old and new dimensions
-    for (int i = 0; i < new_height &&  i < getHeight(); i++) {
+    for (int i = 0; i < new_height && i < getHeight(); i++) {
         //for the min amount of rows of old and new dimension
         for (int j = 0; j < new_width && j < getWidth(); j++) {
             //copy the active data to the temp buffer
-            temp[i*new_width + j] = buffer[i*getWidth() + j];
+            temp[i * new_width + j] = buffer[i * getWidth() + j];
         }
     }
 
@@ -135,7 +136,7 @@ Image::~Image() {
 }
 
 //Copy assignment operator.
-Image &operator=(const Image &right) {
+Image &Image::operator=(const Image &right) {
     return *new Image(right);
 }
 
