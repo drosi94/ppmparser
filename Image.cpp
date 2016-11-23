@@ -1,7 +1,3 @@
-//
-// Created by bdrosatos on 1/11/2016.
-//
-
 #include <cstdlib>
 #include <algorithm>
 #include <iostream>

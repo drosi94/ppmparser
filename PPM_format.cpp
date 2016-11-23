@@ -1,6 +1,3 @@
-//
-// Created by bdrosatos on 2/11/2016.
-//
 #include <fstream>;
 #include <iostream>
 #include <cstdlib>
