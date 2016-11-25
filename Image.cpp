@@ -25,7 +25,7 @@ namespace imaging {
 
         //checking if index is out of bounds
         if (index < 0 || index > 3 * getWidth() * getHeight()) {
-            //if out of bounds, return null
+            //if out of bounds, return black
             return Color(0, 0, 0);
         }
 

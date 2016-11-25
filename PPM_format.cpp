@@ -86,6 +86,7 @@ namespace imaging {
         //CREATE NEW IMAGE
         Image *image = new Image(width, height, data_ptr);
 
+        delete[] data_ptr;
         return image;
 
     }

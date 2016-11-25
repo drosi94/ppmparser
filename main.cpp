@@ -12,7 +12,7 @@ int main(int argc, char *argv[]) {
     char *ppmPath = new char[50];
 
     if (argc == 2) { // argc the number of extra parameters
-        ppmPath = argv[1]; // argv[0] -> the name of .out file, argv[1] -> the extra parameter
+        ppmPath = argv[1]; // argv[0] -> the name of .out file, argv[1] -> the extra parameter, the image file path
     } else if (argc == 1) {
         printf("Enter the name of the ppm file to get the details: ");
         std::cin >> ppmPath;
@@ -43,6 +43,7 @@ int main(int argc, char *argv[]) {
     cout << "The average color of the image is : (" << averageR << "," << averageG << "," <<
          averageB << ")";
 
+    delete[] data_ptr;
     system("PAUSE");
     return 0;
 
