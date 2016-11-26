@@ -92,4 +92,50 @@ namespace imaging {
 
     }
 
+    bool WritePPM(Image & image, const char * filename){
+
+        //Declare the output stream to a file
+        ofstream newfile;
+
+        //try to open the file as binary stream
+        newfile.open(filename, ofstream::binary );
+
+        //check if file opened
+        if(!newfile.good()){
+            //print error message
+            cout << "Cannot open file.";
+            return false;
+        }
+
+        //write in the file the header of ppm image
+        newfile << "P6"
+                << " " << image.getWidth()
+                << " " << image.getHeight()
+                << " " << "255"
+                << " " ;
+
+        //for each pixel
+        for (unsigned int h = 0; h < image.getHeight(); h++) {
+            for (unsigned int w = 0; w < image.getWidth(); w++) {		//for each pixel (3 continuous numbers from the internal buffer, starting from index 0
+                //get the pixel from image
+                Color color =  image.getPixel(w, h);
+                //for each color channel
+                //change from range 0-1 to 0-255
+                //and save it to a temp array
+                char temp[3];
+                temp[0] = char(color.r * 255);
+                temp[1] = char(color.g * 255);
+                temp[2] = char(color.b * 255);
+                //write current pixel on the file
+//                cout << "h" << h << " w " << w;
+                newfile.write(temp,3);
+            }
+        }
+        //close file
+        newfile.close();
+        return true;
+
+    }
+
+
 }
