@@ -12,7 +12,7 @@ namespace imaging {
 
         ifstream reader;
         unsigned int height, width;
-        component_t maxBytes;
+        float maxBytes;
         int dataSize;
         unsigned char *readerData;
         string nextCharacter = "";
@@ -67,17 +67,21 @@ namespace imaging {
         //BODY
 
 
-        dataSize = 3 * width * height;
+        dataSize = 3*width * height;
         readerData = new unsigned char[dataSize];
 
         //READ BODY DATA FROM FILE, size = 3 * width * height
         reader.read((char *) readerData, dataSize);
 
-        component_t *data_ptr = new component_t[dataSize];
+        Color *data_ptr = new Color[dataSize];
 
+        unsigned  int y = 0;
         //READ FOR EACH COLOR RGB(3 BYTES)
-        for (int i = 0; i < dataSize; i++) {
-            data_ptr[i] = readerData[i] / maxBytes;
+        for (unsigned int i = 0; i < dataSize; i+=3) {
+
+            Color* color =  new Color(readerData[i] / maxBytes, readerData[i + 1] / maxBytes , readerData[i + 2] / maxBytes);
+            data_ptr[y] = *color;
+            y++;
         }
 
         //CREATE NEW IMAGE

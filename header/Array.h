@@ -129,6 +129,6 @@ namespace math
 
 } // namespace math
 
-#include "../Array.cpp"
+#include "../Array.hpp"
 
 #endif

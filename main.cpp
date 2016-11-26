@@ -26,28 +26,30 @@ int main(int argc, char *argv[]) {
 
     int width = (*image).getWidth();
     int height = (*image).getHeight();
-    component_t *data_ptr = (*image).getRawDataPtr();
 
     cout << "Image dimensions are : " << width << " X " << height << endl;
 
-    component_t countR = 0, countG = 0, countB = 0;
+    float countR = 0, countG = 0, countB = 0;
 
-    //TOTAL RED, GREEN, BLUE
-    for (int i = 0; i < 3* width * height; i+=3) {
-        countR += data_ptr[i + 0];
-        countG += data_ptr[i + 1];
-        countB += data_ptr[i + 2];
+
+    for (unsigned int i = 0; i < height; i++) {
+        for (unsigned int j = 0; j < width; j++) {
+            Color color = (*image).getPixel(j, i);
+
+            countR += color.r;
+            countG += color.g;
+            countB += color.b;
+        }
     }
 
     //AVERAGE NUMBER FOR EACH ONE
-    component_t averageR = countR / (width * height);
-    component_t averageG = countG / (width * height);
-    component_t averageB = countB / (width * height);
+    float averageR = countR / (width * height);
+    float averageG = countG / (width * height);
+    float averageB = countB / (width * height);
 
     cout << "The average color of the image is : (" << averageR << "," << averageG << "," <<
          averageB << ")";
 
-    delete[] data_ptr;
     system("PAUSE");
     return 0;
 
