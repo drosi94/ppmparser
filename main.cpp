@@ -47,7 +47,7 @@ int main(int argc, char *argv[]) {
     cout << "The average color of the image is : (" << averageR << "," << averageG << "," <<
          averageB << ")";
 
-    delete[] data_ptr;
+    delete image;
     system("PAUSE");
     return 0;
 

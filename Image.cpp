@@ -20,7 +20,7 @@ namespace imaging {
         int index = 3 * x + 3 * y * getWidth();
 
         //checking if index is out of bounds
-        if (index < 0 || index > 3 * getWidth() * getHeight()) {
+        if (index < 0 || y >= getHeight() || x >= getWidth()) {
             //if out of bounds, return black
             return Color(0, 0, 0);
         }
@@ -71,18 +71,26 @@ namespace imaging {
         std::copy(data_ptr, data_ptr + 3 * getWidth() * getHeight(), Image::buffer);
     }
 
+    // changes the size of the image and fills with black if there are any added areas
     void Image::resize(unsigned int new_width, unsigned int new_height) {
-        //create a new temp buffer with the new dimensions
-        component_t *temp = new component_t[3 * new_width * new_height];
-        //for the min amount of lines of old and new dimensions
-        for (int i = 0; i < new_height && i < getHeight(); i++) {
-            //for the min amount of rows of old and new dimension
-            for (int j = 0; j < new_width && j < getWidth(); j++) {
-                //copy the active data to the temp buffer
-                temp[i * new_width + j] = buffer[i * getWidth() + j];
+
+        // Create a new temp buffer for the resized image, with the new size
+        component_t *new_buffer = new component_t[3 * new_width * new_height];
+
+        //Loop through each row (as height)
+        for (unsigned int h= 0; h < new_height; h++) {
+            // and each column ( as width)
+            for (unsigned int w = 0; w < new_width; w++) {
+                // Gets the RBG values of the image, if the current pixel
+                // is inside our original
+                // if pixel is not in the image returns black ( 0,0,0 )
+                Color color = getPixel(w, h);
+                int p = 3 * w + 3 * h * new_width;
+                new_buffer[p] = color.r;
+                new_buffer[p + 1] = color.g;
+                new_buffer[p + 2] = color.b;
             }
         }
-
         //delete the old buffer
         delete[] getRawDataPtr();
         //allocate new memory with the new dimensions
@@ -91,8 +99,12 @@ namespace imaging {
         Image::buffer = new component_t[3 * new_width * new_height];
 
         //copy the data to the existing bufferr
-        setData((const component_t *&) temp);
+        setData((const component_t *&) new_buffer);
+
+        //free the memory
+        delete[] new_buffer;
     }
+
 
 //Default constructor.
     Image::Image() {
