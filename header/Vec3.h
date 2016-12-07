@@ -42,7 +42,7 @@ namespace math
 		 */
 		S & operator [] (size_t index)
 		{
-			return *(this + index);
+			return *((S*)this + index);
 		}
 
 		/*! Vector addition.
