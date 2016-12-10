@@ -78,7 +78,7 @@ namespace imaging {
 //    }
 
     //Default constructor.
-    Image::Image() : Array<Color>(0,0) {
+    Image::Image() : Array<Color>(0, 0) {
         buffer = nullptr;
     }
 
@@ -99,13 +99,30 @@ namespace imaging {
     Image::~Image() {//Array Destructor will delete buffer pointer
     }
 
-    bool Image::operator << (std::string filename){
-	    ReadPPM(filename.c_str());
+    bool Image::operator<<(std::string filename) {
+
+        Image *tempImage = ReadPPM(filename.c_str());
+
+        if (tempImage == NULL) {
+            return false;
+        }
+        this->width = tempImage->getWidth();
+        this->height = tempImage->getHeight();
+        if (this->buffer != NULL) {
+            delete buffer;
+        }
+
+        this->buffer = new Color[3 * width * height];
+
+        this->setData((const Color *&) (tempImage->buffer));
+
+        delete tempImage;
+
         return true;
     }
 
-    bool Image::operator >> (std::string filename){
-//        return WritePPM(*this, filename.c_str());
+    bool Image::operator>>(std::string filename) {
+        return WritePPM(*this, filename.c_str());
         return true;
     }
 

@@ -8,7 +8,7 @@ using namespace std;
 
 namespace imaging {
 
-    Image * ReadPPM(const char *filename) {
+    Image *ReadPPM(const char *filename) {
 
         ifstream reader;
         unsigned int height, width;
@@ -67,7 +67,7 @@ namespace imaging {
         //BODY
 
 
-        dataSize = 3*width * height;
+        dataSize = 3 * width * height;
         readerData = new unsigned char[dataSize];
 
         //READ BODY DATA FROM FILE, size = 3 * width * height
@@ -75,11 +75,12 @@ namespace imaging {
 
         Color *data_ptr = new Color[dataSize];
 
-        unsigned  int y = 0;
+        unsigned int y = 0;
         //READ FOR EACH COLOR RGB(3 BYTES)
-        for (unsigned int i = 0; i < dataSize; i+=3) {
+        for (unsigned int i = 0; i < dataSize; i += 3) {
 
-            Color* color =  new Color(readerData[i] / maxBytes, readerData[i + 1] / maxBytes , readerData[i + 2] / maxBytes);
+            Color *color = new Color(readerData[i] / maxBytes, readerData[i + 1] / maxBytes,
+                                     readerData[i + 2] / maxBytes);
             data_ptr[y] = *color;
             y++;
         }
@@ -92,16 +93,16 @@ namespace imaging {
 
     }
 
-    bool WritePPM(Image & image, const char * filename){
+    bool WritePPM(Image &image, const char *filename) {
 
         //Declare the output stream to a file
         ofstream newfile;
 
         //try to open the file as binary stream
-        newfile.open(filename, ofstream::binary );
+        newfile.open(filename, ofstream::binary);
 
         //check if file opened
-        if(!newfile.good()){
+        if (!newfile.good()) {
             //print error message
             cout << "Cannot open file.";
             return false;
@@ -112,13 +113,14 @@ namespace imaging {
                 << " " << image.getWidth()
                 << " " << image.getHeight()
                 << " " << "255"
-                << " " ;
+                << " ";
 
         //for each pixel
         for (unsigned int h = 0; h < image.getHeight(); h++) {
-            for (unsigned int w = 0; w < image.getWidth(); w++) {		//for each pixel (3 continuous numbers from the internal buffer, starting from index 0
+            for (unsigned int w = 0; w <
+                                     image.getWidth(); w++) {        //for each pixel (3 continuous numbers from the internal buffer, starting from index 0
                 //get the pixel from image
-                Color color =  image.getPixel(w, h);
+                Color color = image.getPixel(w, h);
                 //for each color channel
                 //change from range 0-1 to 0-255
                 //and save it to a temp array
@@ -128,7 +130,7 @@ namespace imaging {
                 temp[2] = char(color.b * 255);
                 //write current pixel on the file
 //                cout << "h" << h << " w " << w;
-                newfile.write(temp,3);
+                newfile.write(temp, 3);
             }
         }
         //close file

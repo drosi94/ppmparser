@@ -13,17 +13,24 @@ using namespace std;
 
 int main(int argc, char *argv[]) {
 
-    char *ppmPath = new char[50];
-
+//    char *ppmPath = new char[50];
+    string ppmPath;
     if (argc == 2 || argc == 4) { // argc the number of extra parameters
         ppmPath = argv[1]; // argv[0] -> the name of .out file, argv[1] -> the extra parameter, the image file path
-    }
-    else if (argc == 1) {
+    } else if (argc == 1) {
         printf("Enter the name of the ppm file to get the details: ");
         std::cin >> ppmPath;
     }
 
-    Image *image = ReadPPM(ppmPath);
+//    Image *image = ReadPPM(ppmPath.c_str());
+
+    Image *image = new Image();
+
+    if (!(*image << ppmPath)) {
+        cout << "Error on reading the file" << endl;
+        system("PAUSE");
+        exit(EXIT_FAILURE);
+    }
 
     int width = (*image).getWidth();
     int height = (*image).getHeight();
@@ -49,10 +56,17 @@ int main(int argc, char *argv[]) {
     float averageB = countB / (width * height);
 
     cout << "The average color of the image is : (" << averageR << "," << averageG << "," <<
-         averageB << ")";
+         averageB << ")" << endl;
 
-    if(argc == 4) {
-        WritePPM(*image, argv[3]);
+    if (argc == 4) {
+//        WritePPM(*image, argv[3]);
+
+        if (!(*image >> argv[3])) {
+
+            cout << "Error on writing the file" << endl;
+            system("PAUSE");
+            exit(EXIT_FAILURE);
+        }
     }
 
     system("PAUSE");
