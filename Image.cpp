@@ -10,11 +10,11 @@ namespace imaging {
 
     Color Image::getPixel(unsigned int x, unsigned int y) const {
 
-         /*
-          Since every pixel has 1 color, we need to
-          find the row ( y * total width
-          and move x columns right
-         */
+        /*
+         Since every pixel has 1 color, we need to
+         find the row ( y * total width
+         and move x columns right
+        */
         int index = x + y * getWidth();
 
         //checking if index is out of bounds
@@ -35,7 +35,7 @@ namespace imaging {
             system("PAUSE");
             exit(EXIT_FAILURE);
         }
-        
+
         int index = x + y * getWidth();
         buffer[index] = value;
 
@@ -59,28 +59,6 @@ namespace imaging {
         std::copy(data_ptr, data_ptr + getWidth() * getHeight(), Image::buffer);
     }
 
-   void Image::resize(unsigned int new_width, unsigned int new_height) {
-       //create a new temp buffer with the new dimensions
-       Color *temp = new Color[ new_width * new_height];
-       //for the min amount of lines of old and new dimensions
-       for (int i = 0; i < new_height && i < getHeight(); i++) {
-           //for the min amount of rows of old and new dimension
-           for (int j = 0; j < new_width && j < getWidth(); j++) {
-               //copy the active data to the temp buffer
-               temp[i * new_width + j] = buffer[i * getWidth() + j];
-           }
-       }
-
-       //delete the old buffer
-       delete[] getRawDataPtr();
-       //allocate new memory with the new dimensions
-       Image::width = new_width;
-       Image::height = new_height;
-       Image::buffer = new Color[ new_width * new_height];
-
-       //copy the data to the existing bufferr
-       setData((const Color *&) temp);
-   }
 
     //Default constructor.
     Image::Image() : Array<Color>(0, 0) {
@@ -102,7 +80,7 @@ namespace imaging {
 
     //The Image destructor.
     Image::~Image() {}//Array Destructor will delete buffer pointer
-    
+
 
     // Read the image
     bool Image::operator<<(std::string filename) {
@@ -121,7 +99,7 @@ namespace imaging {
             delete buffer;
         }
         //Initialize the new buffer with the right size
-        this->buffer = new Color[ width * height];
+        this->buffer = new Color[width * height];
         // Store the new data into the buffer
         this->setData((const Color *&) (tempImage->buffer));
         // delete the temporary image
@@ -129,6 +107,7 @@ namespace imaging {
         // If all worked, return true
         return true;
     }
+
     //Write
     bool Image::operator>>(std::string filename) {
         // Just calling the write of ppm

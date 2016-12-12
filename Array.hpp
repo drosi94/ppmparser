@@ -61,7 +61,7 @@ namespace math {
 
     //Constructor with width and height specification.
     template<typename T>
-    Array<T>::Array(unsigned int w, unsigned int h){
+    Array<T>::Array(unsigned int w, unsigned int h) {
         Array::width = w;
         Array::height = h;
         Array::buffer = new T[getWidth() * getHeight()];
@@ -70,7 +70,7 @@ namespace math {
 
     //Copy constructor.
     template<typename T>
-    Array<T>::Array(const Array<T> & source) {
+    Array<T>::Array(const Array <T> &source) {
         Array::width = source.width;
         Array::height = source.height;
         std::copy(source.buffer, source.buffer + getWidth() * getHeight() * sizeof(T), Array::buffer);
@@ -78,12 +78,12 @@ namespace math {
 
     //Copy assignment operator.
     template<typename T>
-    Array<T> &Array<T>::operator=(const Array<T> &right) {
+    Array <T> &Array<T>::operator=(const Array <T> &right) {
         return *new Array<T>(right);
     }
 
     template<typename T>
-    bool Array<T>::operator==(const Array<T> &source) const {
+    bool Array<T>::operator==(const Array <T> &source) const {
 
         //Check first, if dimensions are the same
 
@@ -103,6 +103,30 @@ namespace math {
         }
 
         return true;
+    }
+
+    template<typename T>
+    void Array<T>::resize(unsigned int new_width, unsigned int new_height) {
+        //create a new temp buffer with the new dimensions
+        T *temp = new T[new_width * new_height];
+        //for the min amount of lines of old and new dimensions
+        for (int i = 0; i < new_height && i < getHeight(); i++) {
+            //for the min amount of rows of old and new dimension
+            for (int j = 0; j < new_width && j < getWidth(); j++) {
+                //copy the active data to the temp buffer
+                temp[i * new_width + j] = buffer[i * getWidth() + j];
+            }
+        }
+
+        //delete the old buffer
+        delete[] getRawDataPtr();
+        //allocate new memory with the new dimensions
+        Array::width = new_width;
+        Array::height = new_height;
+        Array::buffer = new T[new_width * new_height];
+
+        //copy the data to the existing bufferr
+        std::copy(temp, temp + getWidth() * getHeight(), Array::buffer);
     }
 
     //Destructor

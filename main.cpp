@@ -5,6 +5,7 @@
 #include <iostream>
 #include <cstdio>
 #include <cstdlib>
+#include <cstring>
 
 #include "header/ppm_format.h"
 
@@ -16,9 +17,9 @@ int main(int argc, char *argv[]) {
     //The path of the image to be loaded
     string ppmPath;
     // argc the number of extra parameters
-    if (argc == 2 || argc == 4) { 
+    if (argc == 2 || argc == 4) {
         ppmPath = argv[1]; // argv[0] -> the name of .out file, argv[1] -> the extra parameter, the image file path
-    //If no path was declared in arguments
+        //If no path was declared in arguments
     } else if (argc == 1) {
         printf("Enter the name of the ppm file to get the details: ");
         //Read the pah from command line
@@ -67,10 +68,14 @@ int main(int argc, char *argv[]) {
     //Print the average of colors
     cout << "The average color of the image is : (" << averageR << "," << averageG << "," <<
          averageB << ")" << endl;
+
+    //Resize testing
+//    image->resize(1400,900);
+
     //If there are 4 arguments
     if (argc == 4) {
         // and the third is '-o'
-        if (strcmp(argv[2], "-o") == 0){
+        if (strcmp(argv[2], "-o") == 0) {
             // Write the image to file
             // argv[3] -> Path and name of output file
             if (!(*image >> argv[3])) {
@@ -79,9 +84,9 @@ int main(int argc, char *argv[]) {
                 system("PAUSE");
                 exit(EXIT_FAILURE);
             }
-        }    
+        }
     }
-    
+
     system("PAUSE");
     return 0;
 
