@@ -10,6 +10,11 @@ namespace imaging {
 
     Color Image::getPixel(unsigned int x, unsigned int y) const {
 
+         /*
+          Since every pixel has 1 color, we need to
+          find the row ( y * total width
+          and move x columns right
+         */
         int index = x + y * getWidth();
 
         //checking if index is out of bounds
@@ -30,7 +35,7 @@ namespace imaging {
             system("PAUSE");
             exit(EXIT_FAILURE);
         }
-
+        
         int index = x + y * getWidth();
         buffer[index] = value;
 
@@ -47,7 +52,7 @@ namespace imaging {
         }
 
         //Copy Duplicates data from one pointer to another
-        //params of copy : (
+        //params of copy : 
         // starting index (data_ptr stores the first memory position),
         // ending index ( starting position + total number of colors
         // destination ( the buffer of the image)
@@ -71,10 +76,10 @@ namespace imaging {
        //allocate new memory with the new dimensions
        Image::width = new_width;
        Image::height = new_height;
-       Image::buffer = new component_t[3 * new_width * new_height];
+       Image::buffer = new Color[ new_width * new_height];
 
        //copy the data to the existing bufferr
-       setData((const component_t *&) temp);
+       setData((const Color *&) temp);
    }
 
     //Default constructor.
@@ -96,34 +101,39 @@ namespace imaging {
     Image::Image(const Image &src) : Array<Color>(src) {}
 
     //The Image destructor.
-    Image::~Image() {//Array Destructor will delete buffer pointer
-    }
+    Image::~Image() {}//Array Destructor will delete buffer pointer
+    
 
+    // Read the image
     bool Image::operator<<(std::string filename) {
-
+        // Create a temp image and store the image there
+        // using the ppm read
         Image *tempImage = ReadPPM(filename.c_str());
-
+        // if the read failed, return false
         if (tempImage == NULL) {
             return false;
         }
+        //Change the old dimensions with new 
         this->width = tempImage->getWidth();
         this->height = tempImage->getHeight();
+        // If there is a buffer, delete it
         if (this->buffer != NULL) {
             delete buffer;
         }
-
-        this->buffer = new Color[3 * width * height];
-
+        //Initialize the new buffer with the right size
+        this->buffer = new Color[ width * height];
+        // Store the new data into the buffer
         this->setData((const Color *&) (tempImage->buffer));
-
+        // delete the temporary image
         delete tempImage;
-
+        // If all worked, return true
         return true;
     }
-
+    //Write
     bool Image::operator>>(std::string filename) {
+        // Just calling the write of ppm
         return WritePPM(*this, filename.c_str());
-        return true;
+
     }
 
 }
