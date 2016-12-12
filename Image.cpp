@@ -54,28 +54,28 @@ namespace imaging {
         std::copy(data_ptr, data_ptr + getWidth() * getHeight(), Image::buffer);
     }
 
-//    void Image::resize(unsigned int new_width, unsigned int new_height) {
-//        //create a new temp buffer with the new dimensions
-//        Color *temp = new Color[3 * new_width * new_height];
-//        //for the min amount of lines of old and new dimensions
-//        for (int i = 0; i < new_height && i < getHeight(); i++) {
-//            //for the min amount of rows of old and new dimension
-//            for (int j = 0; j < new_width && j < getWidth(); j++) {
-//                //copy the active data to the temp buffer
-//                temp[i * new_width + j] = buffer[i * getWidth() + j];
-//            }
-//        }
-//
-//        //delete the old buffer
-//        delete[] getRawDataPtr();
-//        //allocate new memory with the new dimensions
-//        Image::width = new_width;
-//        Image::height = new_height;
-//        Image::buffer = new component_t[3 * new_width * new_height];
-//
-//        //copy the data to the existing bufferr
-//        setData((const component_t *&) temp);
-//    }
+   void Image::resize(unsigned int new_width, unsigned int new_height) {
+       //create a new temp buffer with the new dimensions
+       Color *temp = new Color[ new_width * new_height];
+       //for the min amount of lines of old and new dimensions
+       for (int i = 0; i < new_height && i < getHeight(); i++) {
+           //for the min amount of rows of old and new dimension
+           for (int j = 0; j < new_width && j < getWidth(); j++) {
+               //copy the active data to the temp buffer
+               temp[i * new_width + j] = buffer[i * getWidth() + j];
+           }
+       }
+
+       //delete the old buffer
+       delete[] getRawDataPtr();
+       //allocate new memory with the new dimensions
+       Image::width = new_width;
+       Image::height = new_height;
+       Image::buffer = new component_t[3 * new_width * new_height];
+
+       //copy the data to the existing bufferr
+       setData((const component_t *&) temp);
+   }
 
     //Default constructor.
     Image::Image() : Array<Color>(0, 0) {
