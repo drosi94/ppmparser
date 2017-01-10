@@ -3,5 +3,5 @@ project(PPMParser)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
-set(SOURCE_FILES main.cpp Image.cpp PPM_format.cpp Array.hpp)
+set(SOURCE_FILES main.cpp Image.cpp PPM_format.cpp Array.hpp header/Filter.h Filter.cpp)
 add_executable(PPMParser ${SOURCE_FILES})
