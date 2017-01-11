@@ -12,19 +12,13 @@
 using namespace imaging;
 using namespace std;
 
+const char* getRawName(const char *path);
+
 int main(int argc, char *argv[]) {
 
     //The path of the image to be loaded
-    string ppmPath;
-    // argc the number of extra parameters
-    if (argc == 2 || argc == 4) {
-        ppmPath = argv[1]; // argv[0] -> the name of .out file, argv[1] -> the extra parameter, the image file path
-        //If no path was declared in arguments
-    } else if (argc == 1) {
-        printf("Enter the name of the ppm file to get the details: ");
-        //Read the pah from command line
-        std::cin >> ppmPath;
-    }
+    // it's always the last argument
+    string ppmPath = argv[argc - 1];
 
     //Create a empty image, where the image will
     //be stored after read
@@ -37,57 +31,93 @@ int main(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
 
-    //Get the dimensions of image
-    int width = (*image).getWidth();
-    int height = (*image).getHeight();
-    // Print the dimensions
-    cout << "Image dimensions are : " << width << " X " << height << endl;
 
-    //Variables to calculate the average colors
-    float countR = 0, countG = 0, countB = 0;
+    //Create a new Filter object
+    Filter *filter = new Filter(image);
 
-    //Loop through all rows of image
-    for (unsigned int i = 0; i < height; i++) {
-        // Loop through all columns of image
-        for (unsigned int j = 0; j < width; j++) {
-            // Create a temporary variable, and
-            //get the color for the specific pixel
-            Color color = (*image).getPixel(j, i);
-            //Add the values for each color
-            countR += color.r;
-            countG += color.g;
-            countB += color.b;
-        }
-    }
+    //for each argument pair ( -f filterName)
+    for (int i = 1; i < argc - 1; i++) {
+        //check if the first part is -f
+        if (strcmp(argv[i], "-f") == 0) {
+            //Move to next argument
+            i++;
 
-    //AVERAGE NUMBER FOR EACH ONE
-    float averageR = countR / (width * height);
-    float averageG = countG / (width * height);
-    float averageB = countB / (width * height);
+            //Find the filter to be used
+            if (strcmp(argv[i], "gray") == 0) {
 
-    //Print the average of colors
-    cout << "The average color of the image is : (" << averageR << "," << averageG << "," <<
-         averageB << ")" << endl;
-
-    //Resize testing
-//    image->resize(1400,900);
-
-    //If there are 4 arguments
-    if (argc == 4) {
-        // and the third is '-o'
-        if (strcmp(argv[2], "-o") == 0) {
-            // Write the image to file
-            // argv[3] -> Path and name of output file
-            if (!(*image >> argv[3])) {
-                // If failed, print a error and exit
-                cout << "Error on writing the file" << endl;
+                filter->gray();
+                i++;
+                cout << "Gray filter used" << endl;
+            } else if (strcmp(argv[i], "color") == 0) {
+                Color *color = new Color(argv[i + 1], argv[i + 2], argv[i + 3]);
+                filter->color(color);
+                delete color;
+                i += 4;
+                cout << "Color filter used" << endl;
+            } else if (strcmp(argv[i], "blur") == 0) {
+                filter->blur();
+                i++;
+                cout << "Blur filter used" << endl;
+            } else if (strcmp(argv[i], "diff") == 0) {
+                filter->diff();
+                i++;
+                cout << "Diff filter used" << endl;
+            } else if (strcmp(argv[i], "median") == 0) {
+                filter->median();
+                i++;
+                cout << "Median filter used" << endl;
+            } else {
+                //If any error occured, print the error message and stop
+                cout << "Wrong filter name" << endl;
                 system("PAUSE");
                 exit(EXIT_FAILURE);
             }
+
+        } else {
+            cout << "No more filters" << endl;
+            break;
         }
     }
+
+
+    if (!(*image >> ppmPath)) {
+        // If failed, print a error and exit
+        cout << "Error on writing the file" << endl;
+        system("PAUSE");
+        exit(EXIT_FAILURE);
+    }
+
+//    const char * path = ppmPath.c_str();
+//
+//    const char* name = getRawName(path);
 
     system("PAUSE");
     return 0;
 
 }
+
+////Get the raw name of ppm, without the path and the extension
+//const char* getRawName(const char* path) {
+//    if (!path) return nullptr;
+//
+//    int size = 0;
+//    int position = 0;
+//    int length = int(strlen(path));
+//    int index = length - 1;
+//
+//    while (index > 0) {
+//        if (path[index] == '\\' || path[index] == '/') {
+//            position = index+1;
+//            break;
+//        }
+//        index--;
+//    }
+//
+//   length = length-position;
+////    cout << position << endl;
+//
+//     char* name;
+//    memcpy(name, path[position],length);
+//
+//    return path;
+//}
