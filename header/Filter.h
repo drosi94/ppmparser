@@ -22,9 +22,9 @@ namespace imaging {
         void setImage(Image *image);
 
         //Virtual Methods will overrided by sub classes
-        virtual Image* grayFilter() = 0;
+        virtual Image* gray() = 0;
 
-        virtual Image* colorFilter(Color* color) = 0;
+        virtual Image* color(Color* color) = 0;
 
         virtual ~Filter();
 

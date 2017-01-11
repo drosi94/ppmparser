@@ -8,11 +8,16 @@
 #include <cstring>
 
 #include "header/ppm_format.h"
+#include "header/Filter.h"
+#include "header/TopicFilter.h"
 
 using namespace imaging;
 using namespace std;
 
-const char* getRawName(const char *path);
+const char *getRawName(const char *path);
+
+bool isNumber(const string &s);
+
 
 int main(int argc, char *argv[]) {
 
@@ -33,7 +38,7 @@ int main(int argc, char *argv[]) {
 
 
     //Create a new Filter object
-    Filter *filter = new Filter(image);
+    Filter *topicFilter = new TopicFilter(image);
 
     //for each argument pair ( -f filterName)
     for (int i = 1; i < argc - 1; i++) {
@@ -44,26 +49,31 @@ int main(int argc, char *argv[]) {
 
             //Find the filter to be used
             if (strcmp(argv[i], "gray") == 0) {
-
-                filter->gray();
+                image = topicFilter->gray();
                 i++;
                 cout << "Gray filter used" << endl;
             } else if (strcmp(argv[i], "color") == 0) {
-                Color *color = new Color(argv[i + 1], argv[i + 2], argv[i + 3]);
-                filter->color(color);
+                if (!isNumber(argv[i + 1]) || !isNumber(argv[i + 2]) || !isNumber(argv[i + 3])) {
+                    cout << "Error on parameters. Color filter used without color values " << endl;
+                    system("PAUSE");
+                    exit(EXIT_FAILURE);
+                }
+
+                Color *color = new Color(atoi(argv[i + 1]), atoi(argv[i + 2]), atoi(argv[i + 3]));
+                image = topicFilter->color(color);
                 delete color;
                 i += 4;
                 cout << "Color filter used" << endl;
             } else if (strcmp(argv[i], "blur") == 0) {
-                filter->blur();
+//                filter->blur();
                 i++;
                 cout << "Blur filter used" << endl;
             } else if (strcmp(argv[i], "diff") == 0) {
-                filter->diff();
+//                filter->diff();
                 i++;
                 cout << "Diff filter used" << endl;
             } else if (strcmp(argv[i], "median") == 0) {
-                filter->median();
+//                filter->median();
                 i++;
                 cout << "Median filter used" << endl;
             } else {
@@ -79,8 +89,11 @@ int main(int argc, char *argv[]) {
         }
     }
 
+    string newExtention = ".filter.ppm";
 
-    if (!(*image >> ppmPath)) {
+    string name = ppmPath.replace(ppmPath.end()-4,ppmPath.end(),newExtention);
+
+    if (!(*image >> name)) {
         // If failed, print a error and exit
         cout << "Error on writing the file" << endl;
         system("PAUSE");
@@ -121,3 +134,15 @@ int main(int argc, char *argv[]) {
 //
 //    return path;
 //}
+
+//Stackoverflow
+bool isNumber(const string &s) {
+    bool hitDecimal = 0;
+    for (char c : s) {
+        if (c == '.' && !hitDecimal) // 2 '.' in string mean invalid
+            hitDecimal = 1; // first hit here, we forgive and skip
+        else if (!isdigit(c))
+            return 0; // not ., not
+    }
+    return 1;
+}

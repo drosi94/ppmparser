@@ -18,7 +18,8 @@ namespace imaging {
 
         TopicFilter(Image *image) : Filter(image) {};
 
-        Image* grayFilter();
+        Image* gray();
+        Image* color(Color* color);
 
     };
 
