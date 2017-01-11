@@ -14,7 +14,7 @@
 using namespace imaging;
 using namespace std;
 
-const char *getRawName(const char *path);
+
 
 bool isNumber(const string &s);
 
@@ -95,39 +95,12 @@ int main(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
 
-//    const char * path = ppmPath.c_str();
-//
-//    const char* name = getRawName(path);
-
+    system("PAUSE");
     return 0;
 
 }
 
-////Get the raw name of ppm, without the path and the extension
-//const char* getRawName(const char* path) {
-//    if (!path) return nullptr;
-//
-//    int size = 0;
-//    int position = 0;
-//    int length = int(strlen(path));
-//    int index = length - 1;
-//
-//    while (index > 0) {
-//        if (path[index] == '\\' || path[index] == '/') {
-//            position = index+1;
-//            break;
-//        }
-//        index--;
-//    }
-//
-//   length = length-position;
-////    cout << position << endl;
-//
-//     char* name;
-//    memcpy(name, path[position],length);
-//
-//    return path;
-//}
+
 
 //Stackoverflow
 bool isNumber(const string &s) {
