@@ -36,13 +36,6 @@ int main(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
 
-    if (!(*image >> ppmPath + ".mpla.ppm")) {
-        // If failed, print a error and exit
-        cout << "Error on writing the file" << endl;
-        system("PAUSE");
-        exit(EXIT_FAILURE);
-    }
-
     //Create a new Filter object
     Filter *topicFilter = new TopicFilter(image);
 
@@ -56,7 +49,6 @@ int main(int argc, char *argv[]) {
             //Find the filter to be used
             if (strcmp(argv[i], "gray") == 0) {
                 image = topicFilter->gray();
-                i++;
                 cout << "Gray filter used" << endl;
             } else if (strcmp(argv[i], "color") == 0) {
                 if (!isNumber(argv[i + 1]) || !isNumber(argv[i + 2]) || !isNumber(argv[i + 3])) {
@@ -65,22 +57,19 @@ int main(int argc, char *argv[]) {
                     exit(EXIT_FAILURE);
                 }
 
-                Color *color = new Color(atoi(argv[i + 1]), atoi(argv[i + 2]), atoi(argv[i + 3]));
+                Color *color = new Color(atof(argv[i + 1]), atof(argv[i + 2]), atof(argv[i + 3]));
                 image = topicFilter->color(color);
                 delete color;
-                i += 4;
+                i += 3;
                 cout << "Color filter used" << endl;
             } else if (strcmp(argv[i], "blur") == 0) {
 //                filter->blur();
-                i++;
                 cout << "Blur filter used" << endl;
             } else if (strcmp(argv[i], "diff") == 0) {
 //                filter->diff();
-                i++;
                 cout << "Diff filter used" << endl;
             } else if (strcmp(argv[i], "median") == 0) {
 //                filter->median();
-                i++;
                 cout << "Median filter used" << endl;
             } else {
                 //If any error occured, print the error message and stop
@@ -110,7 +99,6 @@ int main(int argc, char *argv[]) {
 //
 //    const char* name = getRawName(path);
 
-    system("PAUSE");
     return 0;
 
 }
