@@ -36,6 +36,12 @@ int main(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
 
+    if (!(*image >> ppmPath + ".mpla.ppm")) {
+        // If failed, print a error and exit
+        cout << "Error on writing the file" << endl;
+        system("PAUSE");
+        exit(EXIT_FAILURE);
+    }
 
     //Create a new Filter object
     Filter *topicFilter = new TopicFilter(image);
