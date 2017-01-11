@@ -1,7 +1,3 @@
-//
-// Created by bdrosatos on 11/1/2017.
-//
-
 #ifndef PPMPARSER_TOPICFILTER_H
 #define PPMPARSER_TOPICFILTER_H
 

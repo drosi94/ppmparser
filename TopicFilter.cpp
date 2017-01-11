@@ -1,7 +1,3 @@
-//
-// Created by bdrosatos on 11/1/2017.
-//
-
 #include "header/TopicFilter.h"
 
 namespace imaging {
