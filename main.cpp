@@ -89,7 +89,7 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    string newExtention = ".filter.ppm";
+    string newExtention = ".filtered.ppm";
 
     string name = ppmPath.replace(ppmPath.end()-4,ppmPath.end(),newExtention);
 
